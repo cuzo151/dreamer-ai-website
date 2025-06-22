@@ -63,10 +63,14 @@ const Capabilities: React.FC = () => {
 
         <div className="mx-auto mt-16 max-w-7xl">
           <dl className="grid max-w-none grid-cols-1 gap-8 lg:grid-cols-3">
-            {capabilities.map((capability) => (
-              <div key={capability.name} className="relative bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-shadow">
+            {capabilities.map((capability, index) => (
+              <div 
+                key={capability.name} 
+                className="relative bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 animate-fade-in-up"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
                 <dt>
-                  <div className="absolute flex h-12 w-12 items-center justify-center rounded-lg bg-dreamer-blue text-white">
+                  <div className="absolute flex h-12 w-12 items-center justify-center rounded-lg bg-dreamer-blue text-white hover-glow transition-all duration-300">
                     <capability.icon className="h-6 w-6" aria-hidden="true" />
                   </div>
                   <p className="ml-16 text-lg font-semibold leading-7 text-dreamer-dark">
@@ -76,9 +80,13 @@ const Capabilities: React.FC = () => {
                 <dd className="ml-16 mt-2 text-base text-gray-600">
                   <p>{capability.description}</p>
                   <ul className="mt-4 space-y-1">
-                    {capability.features.map((feature) => (
-                      <li key={feature} className="text-sm text-gray-500 flex items-center">
-                        <span className="mr-2 text-dreamer-blue">•</span>
+                    {capability.features.map((feature, featureIndex) => (
+                      <li 
+                        key={feature} 
+                        className="text-sm text-gray-500 flex items-center animate-fade-in"
+                        style={{ animationDelay: `${index * 150 + featureIndex * 50 + 300}ms` }}
+                      >
+                        <span className="mr-2 text-dreamer-blue animate-pulse">•</span>
                         {feature}
                       </li>
                     ))}
