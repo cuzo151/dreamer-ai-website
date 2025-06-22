@@ -15,7 +15,7 @@ interface DemoResultProps {
 }
 
 const DemoResult: React.FC<DemoResultProps> = ({ result, type }) => {
-  let parsedResult;
+  let parsedResult: any;
   try {
     parsedResult = JSON.parse(result);
   } catch {

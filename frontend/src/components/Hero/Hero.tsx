@@ -31,9 +31,10 @@ const Hero: React.FC = () => {
           <div className="mt-10 flex items-center justify-center gap-x-6 animate-fade-in-up animation-delay-400">
             <a
               href="#contact"
-              className="rounded-md bg-dreamer-blue px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dreamer-blue transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              className="rounded-md bg-dreamer-blue px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dreamer-blue transition-all duration-300 transform hover:scale-105 hover:shadow-lg relative overflow-hidden"
             >
-              Get Started
+              <span className="relative z-10">Get Started Today</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
             </a>
             <a
               href="#interactive"
