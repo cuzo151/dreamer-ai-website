@@ -7,6 +7,7 @@ import {
   SpeakerWaveIcon 
 } from '@heroicons/react/24/outline';
 import axios from 'axios';
+import DemoResult from './DemoResult';
 
 const Interactive: React.FC = () => {
   const [activeDemo, setActiveDemo] = useState('document');
@@ -167,12 +168,7 @@ const Interactive: React.FC = () => {
               </button>
 
               {demoResult && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-2">Analysis Results:</h4>
-                  <pre className="text-sm text-gray-600 whitespace-pre-wrap">
-                    {demoResult}
-                  </pre>
-                </div>
+                <DemoResult result={demoResult} type="document" />
               )}
             </div>
           )}
@@ -232,12 +228,7 @@ const Interactive: React.FC = () => {
               </div>
 
               {demoResult && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-2">Voice Generation Results:</h4>
-                  <pre className="text-sm text-gray-600 whitespace-pre-wrap">
-                    {demoResult}
-                  </pre>
-                </div>
+                <DemoResult result={demoResult} type="voiceclone" />
               )}
             </div>
           )}
@@ -294,12 +285,7 @@ const Interactive: React.FC = () => {
               </button>
 
               {demoResult && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-2">Lead Generation Results:</h4>
-                  <pre className="text-sm text-gray-600 whitespace-pre-wrap">
-                    {demoResult}
-                  </pre>
-                </div>
+                <DemoResult result={demoResult} type="leads" />
               )}
             </div>
           )}
