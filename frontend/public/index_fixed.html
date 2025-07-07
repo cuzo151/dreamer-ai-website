@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamerAI - Transform Your Business with AI</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #667eea;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Video Section */
+        .video-showcase {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #000;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sound-indicator {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* AI Tools Grid */
+        .ai-tools {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tool-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tool-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        /* Authentication Modal - FIXED WITH HIGH SPECIFICITY */
+        .auth-modal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            display: none !important;
+            justify-content: center !important;
+            align-items: center !important;
+            z-index: 99999 !important;
+            overflow: auto !important;
+        }
+
+        .auth-modal.active {
+            display: flex !important;
+        }
+
+        .auth-content {
+            background: #ffffff !important;
+            padding: 3rem !important;
+            border-radius: 20px !important;
+            max-width: 500px !important;
+            width: 90% !important;
+            max-height: 90vh !important;
+            overflow-y: auto !important;
+            position: relative !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+            border: 3px solid #667eea !important;
+            animation: modalFadeIn 0.3s ease-out !important;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .auth-close {
+            position: absolute !important;
+            top: 1rem !important;
+            right: 1rem !important;
+            background: #f0f0f0 !important;
+            border: none !important;
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            font-size: 1.5rem !important;
+            color: #333 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: background 0.3s ease !important;
+        }
+
+        .auth-close:hover {
+            background: #e0e0e0 !important;
+        }
+
+        .auth-form {
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+        }
+
+        .chatbot-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .chatbot-input-area {
+            padding: 1rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chatbot-send {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .message.bot {
+            background: #e3f2fd;
+            color: #1976d2;
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background: #667eea;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .quick-action {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chatbot-window {
+                width: 300px;
+            }
+
+            .auth-content {
+                padding: 2rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">DreamerAI</a>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#solutions" class="nav-link">Solutions</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn btn-secondary" id="login-btn">Log In</button>
+                <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero section">
+            <div class="container">
+                <h1>Transform Your Business with AI</h1>
+                <p>Unlock the power of artificial intelligence to revolutionize your operations, enhance customer experiences, and drive unprecedented growth.</p>
+                <a href="#services" class="btn btn-primary">Explore Our Solutions</a>
+            </div>
+        </section>
+
+        <!-- Video Showcase -->
+        <section id="about" class="section">
+            <div class="container">
+                <div class="video-showcase">
+                    <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">AI Avatar Showcase</h2>
+                    <div class="video-container">
+                        <video 
+                            id="main-video"
+                            class="main-video" 
+                            controls 
+                            muted 
+                            playsinline
+                            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='100%25' height='100%25' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-size='24'%3EDreamerAI Introduction%3C/text%3E%3C/svg%3E">
+                            <source src="/video" type="video/mp4">
+                            <!-- Fallback to sample video if local file doesn't work -->
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-overlay">
+                            <span id="sound-status">🔇</span>
+                            <span>DreamerAI Intro</span>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem; color: #666;">
+                        Meet our AI-powered avatar introducing DreamerAI solutions
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Tools Section -->
+        <section id="services" class="section">
+            <div class="container">
+                <div class="ai-tools">
+                    <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Our AI-Powered Tools</h2>
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <h3>🎤 AI Voice Clone Tool</h3>
+                            <p>Create realistic voice clones with advanced AI technology. Perfect for content creation, accessibility, and personalized experiences.</p>
+                            <button class="btn btn-primary" style="margin-top: 1rem;">Try Voice Clone</button>
+                        </div>
+                        <div class="tool-card">
+                            <h3>🤖 Voice AI Assistant</h3>
+                            <p>Intelligent voice assistant powered by Eleven Labs integration. Natural conversations and smart responses.</p>
+                            <button class="btn btn-primary" style="margin-top: 1rem;">Launch Assistant</button>
+                        </div>
+                        <div class="tool-card">
+                            <h3>📄 Document Analyzer</h3>
+                            <p>AI-powered document analysis and insights. Extract key information and generate summaries automatically.</p>
+                            <button class="btn btn-primary" style="margin-top: 1rem;">Analyze Documents</button>
+                        </div>
+                        <div class="tool-card">
+                            <h3>📊 Data Insights Generator</h3>
+                            <p>Transform raw data into actionable business insights with our advanced analytics AI.</p>
+                            <button class="btn btn-primary" style="margin-top: 1rem;">Generate Insights</button>
+                        </div>
+                        <div class="tool-card">
+                            <h3>⚙️ Automation Builder</h3>
+                            <p>Build custom automation workflows with our intuitive AI-powered platform.</p>
+                            <button class="btn btn-primary" style="margin-top: 1rem;">Build Automation</button>
+                        </div>
+                        <div class="tool-card">
+                            <h3>🎯 Smart Recommendations</h3>
+                            <p>Get personalized recommendations based on AI analysis of your business patterns.</p>
+                            <button class="btn btn-primary" style="margin-top: 1rem;">Get Recommendations</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Authentication Modal - FIXED VERSION -->
+    <div id="auth-modal" class="auth-modal">
+        <div class="auth-content">
+            <button class="auth-close" id="auth-close">&times;</button>
+            <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Join DreamerAI</h2>
+            <form class="auth-form" id="auth-form">
+                <div class="form-group">
+                    <label for="fullname">Full Name *</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company (Optional)</label>
+                    <input type="text" id="company" name="company">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password *</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to the Terms of Service and Privacy Policy</label>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                <p style="text-align: center; margin-top: 1rem; color: #666;">
+                    Get 5 free uses per AI tool after signup!
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <button class="chatbot-button" id="chatbot-toggle">💬</button>
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <h3>DreamerAI Assistant</h3>
+                <button class="chatbot-close" id="chatbot-close">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="message bot">
+                    Welcome to DreamerAI! I'm here to help you learn about our AI solutions. How can I assist you today?
+                </div>
+                <div class="quick-actions">
+                    <button class="quick-action" data-message="Tell me about your services">Our Services</button>
+                    <button class="quick-action" data-message="What are your pricing plans?">Pricing</button>
+                    <button class="quick-action" data-message="What are the benefits of AI?">AI Benefits</button>
+                    <button class="quick-action" data-message="How do I get started?">Get Started</button>
+                </div>
+            </div>
+            <div class="chatbot-input-area">
+                <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Type your message...">
+                <button class="chatbot-send" id="chatbot-send">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Authentication System with FIXED Modal
+        class AuthenticationSystem {
+            constructor() {
+                this.modal = document.getElementById('auth-modal');
+                this.form = document.getElementById('auth-form');
+                this.closeBtn = document.getElementById('auth-close');
+                this.loginBtn = document.getElementById('login-btn');
+                this.signupBtn = document.getElementById('signup-btn');
+                
+                this.init();
+            }
+
+            init() {
+                console.log('Initializing Authentication System...');
+                
+                // Ensure elements exist before binding
+                if (!this.modal || !this.loginBtn || !this.signupBtn) {
+                    console.error('Required authentication elements not found');
+                    return;
+                }
+
+                // Bind events with proper error handling
+                this.loginBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Login button clicked');
+                    this.showModal('login');
+                });
+
+                this.signupBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Signup button clicked');
+                    this.showModal('signup');
+                });
+
+                if (this.closeBtn) {
+                    this.closeBtn.addEventListener('click', () => this.hideModal());
+                }
+
+                // Click outside to close
+                this.modal.addEventListener('click', (e) => {
+                    if (e.target === this.modal) {
+                        this.hideModal();
+                    }
+                });
+
+                // Form submission
+                if (this.form) {
+                    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                }
+
+                // Escape key handler
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.modal.classList.contains('active')) {
+                        this.hideModal();
+                    }
+                });
+
+                console.log('Authentication System initialized successfully');
+            }
+
+            showModal(type) {
+                console.log(`Showing ${type} modal`);
+                
+                if (!this.modal) {
+                    console.error('Modal element not found');
+                    return;
+                }
+
+                // Ensure modal is displayed
+                this.modal.style.display = 'flex';
+                this.modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Update modal title based on type
+                const title = this.modal.querySelector('h2');
+                if (title) {
+                    title.textContent = type === 'login' ? 'Welcome Back' : 'Join DreamerAI';
+                }
+                
+                // Focus first input
+                setTimeout(() => {
+                    const firstInput = this.form?.querySelector('input');
+                    if (firstInput) {
+                        firstInput.focus();
+                    }
+                }, 100);
+            }
+
+            hideModal() {
+                console.log('Hiding modal');
+                
+                if (this.modal) {
+                    this.modal.classList.remove('active');
+                    // Use timeout to allow animation to complete
+                    setTimeout(() => {
+                        this.modal.style.display = 'none';
+                    }, 300);
+                    document.body.style.overflow = '';
+                }
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                console.log('Form submitted');
+                
+                try {
+                    const formData = new FormData(this.form);
+                    const data = Object.fromEntries(formData);
+                    
+                    // Basic validation
+                    if (data.password !== data['confirm-password']) {
+                        alert('Passwords do not match!');
+                        return;
+                    }
+
+                    if (!data.terms) {
+                        alert('Please accept the Terms of Service');
+                        return;
+                    }
+
+                    // Simulate successful registration
+                    alert('Account created successfully! Welcome to DreamerAI!');
+                    this.hideModal();
+                    this.form.reset();
+                } catch (error) {
+                    console.error('Form submission error:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        }
+
+        // Enhanced Video Sound System
+        class VideoSoundSystem {
+            constructor() {
+                this.video = document.getElementById('main-video');
+                this.soundStatus = document.getElementById('sound-status');
+                this.userInteracted = false;
+                
+                this.init();
+            }
+
+            init() {
+                if (!this.video) {
+                    console.error('Video element not found');
+                    return;
+                }
+
+                // Set initial state
+                this.video.muted = true;
+                this.video.volume = 0.8;
+                
+                // Add event listeners
+                this.video.addEventListener('play', () => this.handleVideoPlay());
+                this.video.addEventListener('pause', () => this.updateSoundIndicator());
+                this.video.addEventListener('volumechange', () => this.updateSoundIndicator());
+                
+                // Sound indicator click handler
+                if (this.soundStatus) {
+                    this.soundStatus.style.cursor = 'pointer';
+                    this.soundStatus.addEventListener('click', () => this.toggleSound());
+                }
+
+                // Enable sound on first user interaction
+                this.setupUserInteractionHandler();
+                
+                console.log('Video Sound System initialized');
+            }
+
+            setupUserInteractionHandler() {
+                const enableSound = () => {
+                    this.userInteracted = true;
+                    if (this.video && !this.video.paused) {
+                        this.video.muted = false;
+                        this.updateSoundIndicator();
+                    }
+                };
+
+                // Use once: true option for automatic removal
+                document.addEventListener('click', enableSound, { once: true });
+                document.addEventListener('touchstart', enableSound, { once: true });
+            }
+
+            handleVideoPlay() {
+                if (this.userInteracted && this.video.muted) {
+                    this.video.muted = false;
+                }
+                this.updateSoundIndicator();
+            }
+
+            toggleSound() {
+                if (this.video) {
+                    this.video.muted = !this.video.muted;
+                    this.updateSoundIndicator();
+                }
+            }
+
+            updateSoundIndicator() {
+                if (this.soundStatus && this.video) {
+                    if (this.video.muted || this.video.volume === 0) {
+                        this.soundStatus.textContent = '🔇';
+                        this.soundStatus.title = 'Click to unmute';
+                    } else {
+                        this.soundStatus.textContent = '🔊';
+                        this.soundStatus.title = 'Click to mute';
+                    }
+                }
+            }
+        }
+
+        // Enhanced Chatbot System
+        class ChatbotSystem {
+            constructor() {
+                this.toggle = document.getElementById('chatbot-toggle');
+                this.window = document.getElementById('chatbot-window');
+                this.close = document.getElementById('chatbot-close');
+                this.messages = document.getElementById('chatbot-messages');
+                this.input = document.getElementById('chatbot-input');
+                this.send = document.getElementById('chatbot-send');
+                this.isOpen = false;
+                
+                this.responses = {
+                    'services': 'We offer AI Voice Clone, Voice AI Assistant, Document Analyzer, Data Insights Generator, Automation Builder, and Smart Recommendations. Each tool is designed to transform your business operations.',
+                    'pricing': 'We offer flexible pricing plans starting with 5 free uses per tool after signup. Contact us for enterprise pricing and custom solutions.',
+                    'benefits': 'AI can automate repetitive tasks, provide data-driven insights, improve customer experiences, reduce costs, and help you make better business decisions.',
+                    'started': 'Getting started is easy! Sign up for a free account, choose your AI tools, and begin transforming your business. Our team is here to help you every step of the way.',
+                    'default': 'Thank you for your question! Our AI solutions can help transform your business. Would you like to know more about our services, pricing, or how to get started?'
+                };
+                
+                this.init();
+            }
+
+            init() {
+                if (!this.toggle || !this.window) {
+                    console.error('Chatbot elements not found');
+                    return;
+                }
+
+                // Event listeners
+                this.toggle.addEventListener('click', () => this.toggleWindow());
+                
+                if (this.close) {
+                    this.close.addEventListener('click', () => this.closeWindow());
+                }
+                
+                if (this.send) {
+                    this.send.addEventListener('click', () => this.sendMessage());
+                }
+                
+                if (this.input) {
+                    this.input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.sendMessage();
+                        }
+                    });
+                }
+
+                // Quick action buttons
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('quick-action')) {
+                        const message = e.target.getAttribute('data-message');
+                        if (message) {
+                            this.addMessage(message, 'user');
+                            this.generateResponse(message);
+                        }
+                    }
+                });
+
+                console.log('Chatbot System initialized');
+            }
+
+            toggleWindow() {
+                if (this.isOpen) {
+                    this.closeWindow();
+                } else {
+                    this.openWindow();
+                }
+            }
+
+            openWindow() {
+                if (this.window) {
+                    this.window.classList.add('active');
+                    this.isOpen = true;
+                    if (this.input) {
+                        setTimeout(() => this.input.focus(), 100);
+                    }
+                }
+            }
+
+            closeWindow() {
+                if (this.window) {
+                    this.window.classList.remove('active');
+                    this.isOpen = false;
+                }
+            }
+
+            sendMessage() {
+                if (this.input && this.input.value.trim()) {
+                    const message = this.input.value.trim();
+                    this.addMessage(message, 'user');
+                    this.input.value = '';
+                    
+                    // Generate response after a short delay
+                    setTimeout(() => this.generateResponse(message), 500);
+                }
+            }
+
+            addMessage(text, type) {
+                if (this.messages) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${type}`;
+                    messageDiv.textContent = text;
+                    this.messages.appendChild(messageDiv);
+                    this.messages.scrollTop = this.messages.scrollHeight;
+                }
+            }
+
+            generateResponse(userMessage) {
+                const lowerMessage = userMessage.toLowerCase();
+                let response = this.responses.default;
+
+                if (lowerMessage.includes('service') || lowerMessage.includes('tool') || lowerMessage.includes('offer')) {
+                    response = this.responses.services;
+                } else if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('plan')) {
+                    response = this.responses.pricing;
+                } else if (lowerMessage.includes('benefit') || lowerMessage.includes('advantage') || lowerMessage.includes('help')) {
+                    response = this.responses.benefits;
+                } else if (lowerMessage.includes('start') || lowerMessage.includes('begin') || lowerMessage.includes('how')) {
+                    response = this.responses.started;
+                }
+
+                this.addMessage(response, 'bot');
+            }
+        }
+
+        // Navigation System
+        class NavigationSystem {
+            constructor() {
+                this.navLinks = document.querySelectorAll('.nav-link');
+                this.init();
+            }
+
+            init() {
+                this.navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = link.getAttribute('href');
+                        if (target && target.startsWith('#')) {
+                            this.scrollToSection(target);
+                            this.setActiveLink(link);
+                        }
+                    });
+                });
+
+                // Set active link on scroll
+                window.addEventListener('scroll', () => this.updateActiveLink());
+                
+                console.log('Navigation System initialized');
+            }
+
+            scrollToSection(target) {
+                const element = document.querySelector(target);
+                if (element) {
+                    const headerHeight = document.querySelector('.header')?.offsetHeight || 80;
+                    const elementPosition = element.offsetTop - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: elementPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
+            setActiveLink(activeLink) {
+                this.navLinks.forEach(link => link.classList.remove('active'));
+                activeLink.classList.add('active');
+            }
+
+            updateActiveLink() {
+                const sections = document.querySelectorAll('.section');
+                const headerHeight = document.querySelector('.header')?.offsetHeight || 80;
+                const scrollPosition = window.scrollY + headerHeight + 100;
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    const sectionId = section.getAttribute('id');
+
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                        const correspondingLink = document.querySelector(`[href="#${sectionId}"]`);
+                        if (correspondingLink) {
+                            this.setActiveLink(correspondingLink);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize all systems when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Initializing all systems...');
+            
+            try {
+                // Initialize each system
+                const authSystem = new AuthenticationSystem();
+                const videoSystem = new VideoSoundSystem();
+                const chatbotSystem = new ChatbotSystem();
+                const navSystem = new NavigationSystem();
+                
+                console.log('✅ All systems initialized successfully');
+                
+                // Log system status
+                console.log('System Status:', {
+                    authentication: !!authSystem.modal,
+                    video: !!videoSystem.video,
+                    chatbot: !!chatbotSystem.window,
+                    navigation: navSystem.navLinks.length > 0
+                });
+                
+            } catch (error) {
+                console.error('❌ System initialization error:', error);
+            }
+        });
+
+        // Global error handler
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.error);
+        });
+
+        // Log page load completion
+        window.addEventListener('load', function() {
+            console.log('✅ Page fully loaded');
+        });
+    </script>
+</body>
+</html>

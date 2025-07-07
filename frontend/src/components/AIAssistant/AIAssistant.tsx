@@ -14,15 +14,23 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! I\'m the Dreamer AI assistant. How can I help you learn about our solutions today?',
+      text: 'Welcome to DreamerAI! I\'m here to help you learn about our AI solutions. How can I assist you today?',
       sender: 'assistant',
       timestamp: new Date()
     }
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
+
+  const quickActions = [
+    { text: 'Our Services', message: 'Tell me about your services' },
+    { text: 'Pricing', message: 'What are your pricing plans?' },
+    { text: 'AI Benefits', message: 'What are the benefits of AI?' },
+    { text: 'Get Started', message: 'How do I get started?' }
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,12 +40,19 @@ const AIAssistant: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (!inputText.trim()) return;
+  const handleQuickAction = (message: string) => {
+    setInputText(message);
+    setShowQuickActions(false);
+    setTimeout(() => handleSendMessage(message), 100);
+  };
+
+  const handleSendMessage = async (messageText?: string) => {
+    const text = messageText || inputText;
+    if (!text.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputText,
+      text: text,
       sender: 'user',
       timestamp: new Date()
     };
@@ -45,9 +60,10 @@ const AIAssistant: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
     setIsTyping(true);
+    setShowQuickActions(false);
 
     try {
-      const response = await chatAPI.sendMessage(inputText, conversationId || undefined);
+      const response = await chatAPI.sendMessage(text, conversationId || undefined);
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -59,9 +75,23 @@ const AIAssistant: React.FC = () => {
       setMessages(prev => [...prev, assistantMessage]);
       setConversationId(response.conversationId);
     } catch (error) {
+      // Provide intelligent fallback responses
+      let fallbackResponse = 'I apologize, but I\'m currently unavailable. Please try again later or contact us at support@dreamerai.io.';
+      
+      const lowerText = text.toLowerCase();
+      if (lowerText.includes('service') || lowerText.includes('tool') || lowerText.includes('offer')) {
+        fallbackResponse = 'We offer AI Voice Clone, Voice AI Assistant, Document Analyzer, Data Insights Generator, Automation Builder, and Smart Recommendations. Each tool is designed to transform your business operations.';
+      } else if (lowerText.includes('price') || lowerText.includes('cost') || lowerText.includes('plan')) {
+        fallbackResponse = 'We offer flexible pricing plans starting with 5 free uses per tool after signup. Contact us for enterprise pricing and custom solutions.';
+      } else if (lowerText.includes('benefit') || lowerText.includes('advantage') || lowerText.includes('help')) {
+        fallbackResponse = 'AI can automate repetitive tasks, provide data-driven insights, improve customer experiences, reduce costs, and help you make better business decisions.';
+      } else if (lowerText.includes('start') || lowerText.includes('begin') || lowerText.includes('how')) {
+        fallbackResponse = 'Getting started is easy! Sign up for a free account, choose your AI tools, and begin transforming your business. Our team is here to help you every step of the way.';
+      }
+
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'I apologize, but I\'m currently unavailable. Please try again later or contact us at support@dreamerai.io.',
+        text: fallbackResponse,
         sender: 'assistant',
         timestamp: new Date()
       };
@@ -134,6 +164,22 @@ const AIAssistant: React.FC = () => {
               </div>
             </div>
           ))}
+          
+          {/* Quick Actions */}
+          {showQuickActions && messages.length === 1 && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {quickActions.map((action, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleQuickAction(action.message)}
+                  className="bg-dreamer-blue text-white px-4 py-2 rounded-full text-sm hover:bg-blue-600 transition-colors"
+                >
+                  {action.text}
+                </button>
+              ))}
+            </div>
+          )}
+          
           {isTyping && (
             <div className="flex justify-start">
               <div className="bg-gray-100 rounded-lg p-3">

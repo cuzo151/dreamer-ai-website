@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import AuthModal from '../AuthModal/AuthModal';
 
 const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('signup');
 
   const navigation = [
     { name: 'Solutions', href: '#capabilities' },
@@ -10,6 +13,11 @@ const Header: React.FC = () => {
     { name: 'About', href: '#about' },
     { name: 'Contact', href: '#contact' },
   ];
+
+  const handleAuthClick = (mode: 'login' | 'signup') => {
+    setAuthMode(mode);
+    setAuthModalOpen(true);
+  };
 
   return (
     <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 animate-fade-in-down">
@@ -29,7 +37,7 @@ const Header: React.FC = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:gap-x-8 animate-slide-in-right">
+          <div className="hidden lg:flex lg:gap-x-8 animate-slide-in-right items-center">
             {navigation.map((item, index) => (
               <a
                 key={item.name}
@@ -40,12 +48,18 @@ const Header: React.FC = () => {
                 {item.name}
               </a>
             ))}
-            <a
-              href="#contact"
+            <button
+              onClick={() => handleAuthClick('login')}
+              className="text-sm font-medium text-dreamer-blue hover:text-blue-600 transition-all duration-300 animate-fade-in animation-delay-500"
+            >
+              Log In
+            </button>
+            <button
+              onClick={() => handleAuthClick('signup')}
               className="text-sm font-medium text-white bg-dreamer-blue px-4 py-2 rounded-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg animate-fade-in animation-delay-600"
             >
-              Request Demo
-            </a>
+              Sign Up
+            </button>
           </div>
 
           {/* Mobile menu button */}
@@ -79,17 +93,35 @@ const Header: React.FC = () => {
                   {item.name}
                 </a>
               ))}
-              <a
-                href="#demo"
-                className="block px-3 py-2 text-base font-medium text-white bg-dreamer-blue hover:bg-blue-600"
-                onClick={() => setMobileMenuOpen(false)}
+              <button
+                onClick={() => {
+                  handleAuthClick('login');
+                  setMobileMenuOpen(false);
+                }}
+                className="block px-3 py-2 text-base font-medium text-dreamer-blue hover:bg-gray-50"
               >
-                Request Demo
-              </a>
+                Log In
+              </button>
+              <button
+                onClick={() => {
+                  handleAuthClick('signup');
+                  setMobileMenuOpen(false);
+                }}
+                className="block px-3 py-2 text-base font-medium text-white bg-dreamer-blue hover:bg-blue-600"
+              >
+                Sign Up
+              </button>
             </div>
           </div>
         )}
       </nav>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        mode={authMode}
+      />
     </header>
   );
 };
