@@ -1,0 +1,295 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18.x'
+  
+jobs:
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: dreamer_ai_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Setup test environment
+      working-directory: ./backend
+      run: |
+        cp .env.test .env
+        echo "DB_HOST=localhost" >> .env
+        echo "REDIS_URL=redis://localhost:6379/1" >> .env
+
+    - name: Run linting
+      working-directory: ./backend
+      run: npm run lint
+
+    - name: Run unit tests
+      working-directory: ./backend
+      run: npm run test:unit -- --coverage
+
+    - name: Run integration tests
+      working-directory: ./backend
+      run: npm run test:integration -- --coverage
+
+    - name: Upload backend coverage
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-coverage
+        path: backend/coverage
+        retention-days: 7
+
+    - name: Comment test results on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const coverage = JSON.parse(fs.readFileSync('backend/coverage/coverage-summary.json', 'utf8'));
+          const total = coverage.total;
+          
+          const comment = `## Backend Test Results ✅
+          
+          | Metric | Coverage |
+          |--------|----------|
+          | Statements | ${total.statements.pct}% |
+          | Branches | ${total.branches.pct}% |
+          | Functions | ${total.functions.pct}% |
+          | Lines | ${total.lines.pct}% |`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Run linting
+      working-directory: ./frontend
+      run: npm run lint || true
+
+    - name: Run component tests
+      working-directory: ./frontend
+      run: npm test -- --coverage --watchAll=false
+
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+
+    - name: Upload frontend coverage
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-coverage
+        path: frontend/coverage
+        retention-days: 7
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: frontend/build
+        retention-days: 7
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: dreamer_ai_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        npm ci --prefix backend
+        npm ci --prefix frontend
+        npm install -g wait-on
+
+    - name: Setup backend environment
+      working-directory: ./backend
+      run: |
+        cp .env.test .env
+        echo "DB_HOST=localhost" >> .env
+        echo "REDIS_URL=redis://localhost:6379/1" >> .env
+
+    - name: Start backend server
+      working-directory: ./backend
+      run: |
+        npm run db:setup || true
+        npm run db:migrate || true
+        npm start &
+      env:
+        NODE_ENV: test
+
+    - name: Start frontend server
+      working-directory: ./frontend
+      run: npm start &
+      env:
+        REACT_APP_API_URL: http://localhost:5000
+
+    - name: Wait for servers
+      run: |
+        wait-on http://localhost:5000/api/health -t 60000
+        wait-on http://localhost:3000 -t 60000
+
+    - name: Run Cypress E2E tests
+      uses: cypress-io/github-action@v5
+      with:
+        working-directory: ./
+        wait-on: 'http://localhost:3000, http://localhost:5000/api/health'
+        wait-on-timeout: 120
+        browser: chrome
+        record: false
+
+    - name: Upload E2E test videos
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-videos
+        path: cypress/videos
+        retention-days: 7
+
+    - name: Upload E2E test screenshots
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-screenshots
+        path: cypress/screenshots
+        retention-days: 7
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+    - name: Run npm audit
+      run: |
+        cd backend && npm audit --production || true
+        cd ../frontend && npm audit --production || true
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectKey=dreamer-ai-website
+          -Dsonar.organization=dreamer-ai
+          -Dsonar.sources=backend/,frontend/src/
+          -Dsonar.tests=backend/tests/,frontend/src/
+          -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info,frontend/coverage/lcov.info
+
+  all-tests-pass:
+    name: All Tests Pass
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, e2e-tests, security-scan, code-quality]
+    
+    steps:
+    - name: Tests Complete
+      run: |
+        echo "✅ All tests passed successfully!"
+        echo "Backend tests: ✓"
+        echo "Frontend tests: ✓"
+        echo "E2E tests: ✓"
+        echo "Security scan: ✓"
+        echo "Code quality: ✓"

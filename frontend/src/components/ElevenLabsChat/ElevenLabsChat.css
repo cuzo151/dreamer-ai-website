@@ -1,0 +1,19 @@
+/* ElevenLabs Chat Styles */
+.elevenlabs-chat-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+/* Ensure the widget doesn't overlap with the existing AI Assistant */
+@media (max-width: 768px) {
+  .elevenlabs-chat-container {
+    bottom: 80px; /* Move it higher on mobile to avoid overlap */
+  }
+}
+
+/* Style overrides for ElevenLabs widget (if needed) */
+.elevenlabs-chat-container elevenlabs-convai {
+  /* Custom styles can be added here if the widget supports it */
+}

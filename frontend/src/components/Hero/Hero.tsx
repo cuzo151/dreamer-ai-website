@@ -1,49 +1,105 @@
 import React from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import AnimatedSection from '../Animation/AnimatedSection';
+import AnimatedButton from '../Animation/AnimatedButton';
+import AnimatedBackground from '../Animation/AnimatedBackground';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 const Hero: React.FC = () => {
+  const { scrollY } = useScroll();
+  const prefersReducedMotion = useReducedMotion();
+  
+  const y1 = useTransform(scrollY, [0, 300], prefersReducedMotion ? [0, 0] : [0, -50]);
+  const y2 = useTransform(scrollY, [0, 300], prefersReducedMotion ? [0, 0] : [0, -100]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0.8]);
+
   return (
     <section className="relative pt-32 pb-16 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
       {/* Animated background elements */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDYwIDAgTCAwIDAgMCA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1vcGFjaXR5PSIwLjAyIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30"></div>
+      <AnimatedBackground variant="shapes" className="opacity-10" />
       
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+      <motion.div 
+        className="mx-auto max-w-7xl px-6 lg:px-8 relative"
+        style={{ opacity }}
+      >
         <div className="mx-auto max-w-3xl text-center">
-          <div className="mb-8 flex justify-center animate-fade-in-down">
-            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all duration-300 hover:scale-105">
-              <SparklesIcon className="inline h-4 w-4 mr-1 text-dreamer-blue animate-pulse" />
-              Trusted by leading law firms and enterprises
+          <AnimatedSection animation="fadeInDown" delay={0.2}>
+            <motion.div 
+              className="mb-8 flex justify-center"
+              whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
+            >
+              <motion.div 
+                className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all duration-300"
+                style={{ y: y1 }}
+              >
+                <motion.div
+                  animate={prefersReducedMotion ? {} : { rotate: 360 }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  className="inline-block"
+                >
+                  <SparklesIcon className="inline h-4 w-4 mr-1 text-dreamer-blue" />
+                </motion.div>
+                Trusted by leading law firms and enterprises
+              </motion.div>
+            </motion.div>
+          </AnimatedSection>
+          
+          <AnimatedSection animation="fadeInUp" delay={0.3}>
+            <motion.h1 
+              className="text-4xl font-bold tracking-tight text-dreamer-dark sm:text-6xl"
+              style={{ y: y2 }}
+            >
+              Transform Your Business with{' '}
+              <motion.span 
+                className="text-dreamer-blue bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent"
+                animate={prefersReducedMotion ? {} : {
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                style={{ backgroundSize: '200% 200%' }}
+              >
+                Intelligent AI Solutions
+              </motion.span>
+            </motion.h1>
+          </AnimatedSection>
+          
+          <AnimatedSection animation="fadeInUp" delay={0.4}>
+            <motion.p 
+              className="mt-6 text-lg leading-8 text-gray-600"
+              style={{ y: y2 }}
+            >
+              Dreamer AI Solutions delivers enterprise-grade artificial intelligence that drives efficiency, 
+              enhances decision-making, and unlocks new possibilities for your organization.
+            </motion.p>
+          </AnimatedSection>
+          
+          <AnimatedSection animation="fadeInUp" delay={0.5}>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <AnimatedButton
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                variant="primary"
+                size="medium"
+              >
+                Start Your AI Journey
+              </AnimatedButton>
+              <motion.a
+                href="#industry-use-cases"
+                className="text-sm font-semibold leading-6 text-gray-900 flex items-center group"
+                whileHover={{ x: 5 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                Explore Industry Solutions
+                <motion.div
+                  className="ml-2"
+                  whileHover={{ x: 5 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <ArrowRightIcon className="h-4 w-4" />
+                </motion.div>
+              </motion.a>
             </div>
-          </div>
-          
-          <h1 className="text-4xl font-bold tracking-tight text-dreamer-dark sm:text-6xl animate-fade-in-up">
-            Transform Your Business with{' '}
-            <span className="text-dreamer-blue bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent animate-gradient">
-              Intelligent AI Solutions
-            </span>
-          </h1>
-          
-          <p className="mt-6 text-lg leading-8 text-gray-600 animate-fade-in-up animation-delay-200">
-            Dreamer AI Solutions delivers enterprise-grade artificial intelligence that drives efficiency, 
-            enhances decision-making, and unlocks new possibilities for your organization.
-          </p>
-          
-          <div className="mt-10 flex items-center justify-center gap-x-6 animate-fade-in-up animation-delay-400">
-            <a
-              href="#contact"
-              className="rounded-md bg-dreamer-blue px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dreamer-blue transition-all duration-300 transform hover:scale-105 hover:shadow-lg relative overflow-hidden"
-            >
-              <span className="relative z-10">Get Started Today</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-            </a>
-            <a
-              href="#interactive"
-              className="text-sm font-semibold leading-6 text-gray-900 flex items-center group transition-all duration-300 hover:text-dreamer-blue"
-            >
-              See Live Demos 
-              <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-            </a>
-          </div>
+          </AnimatedSection>
         </div>
 
         {/* Trust indicators */}
@@ -54,17 +110,32 @@ const Hero: React.FC = () => {
             { label: "Support", value: "24/7" },
             { label: "Compliant", value: "ISO 27001" }
           ].map((item, index) => (
-            <div 
-              key={item.label}
-              className="text-center transform transition-all duration-500 hover:scale-110 animate-fade-in-up"
-              style={{ animationDelay: `${600 + index * 100}ms` }}
-            >
-              <div className="text-2xl font-bold text-dreamer-dark">{item.value}</div>
-              <div className="text-sm text-gray-600">{item.label}</div>
-            </div>
+            <AnimatedSection key={item.label} animation="scale" delay={0.6 + index * 0.1}>
+              <motion.div 
+                className="text-center"
+                whileHover={prefersReducedMotion ? {} : { 
+                  scale: 1.1,
+                  transition: { type: "spring", stiffness: 300 }
+                }}
+              >
+                <motion.div 
+                  className="text-2xl font-bold text-dreamer-dark"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ 
+                    delay: 0.8 + index * 0.1,
+                    type: "spring",
+                    stiffness: 200
+                  }}
+                >
+                  {item.value}
+                </motion.div>
+                <div className="text-sm text-gray-600">{item.label}</div>
+              </motion.div>
+            </AnimatedSection>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

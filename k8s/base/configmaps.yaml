@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  labels:
+    app: frontend
+data:
+  api.url: "https://api.dreamer-ai.com"
+  app.name: "Dreamer AI Solutions"
+  app.version: "1.0.0"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  labels:
+    app: backend
+data:
+  log.level: "info"
+  cors.origins: "https://dreamer-ai.com,https://www.dreamer-ai.com"
+  rate.limit.window: "15m"
+  rate.limit.max: "100"
+  jwt.expiration: "24h"
+  bcrypt.rounds: "10"
+  api.version: "v1"
+  database.pool.min: "2"
+  database.pool.max: "10"
+  database.timeout: "30000"

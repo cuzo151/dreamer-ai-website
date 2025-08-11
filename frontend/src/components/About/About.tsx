@@ -193,8 +193,22 @@ const About: React.FC = () => {
             <div className="grid grid-cols-1 gap-x-12 gap-y-10 lg:grid-cols-3 items-start">
               <div className="lg:col-span-1">
                 <div className="text-center">
-                  <div className="aspect-w-1 aspect-h-1 bg-gradient-to-br from-dreamer-blue to-blue-600 rounded-full w-56 h-56 mx-auto flex items-center justify-center shadow-2xl">
-                    <UserIcon className="h-28 w-28 text-white" />
+                  <div className="aspect-w-1 aspect-h-1 rounded-full w-56 h-56 mx-auto flex items-center justify-center shadow-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                    <img 
+                      src="/founder-jlasalle.png" 
+                      alt="J. LaSalle - Founder & CEO"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to SVG if image not found
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                    <svg viewBox="0 0 200 200" className="w-full h-full hidden">
+                      <circle cx="100" cy="100" r="100" fill="#1e90ff"/>
+                      <circle cx="100" cy="80" r="25" fill="white" stroke="white" strokeWidth="3"/>
+                      <path d="M100 115c25 0 45 20 45 45v40H55v-40c0-25 20-45 45-45z" fill="white"/>
+                    </svg>
                   </div>
                   <div className="mt-6">
                     <h4 className="text-2xl font-bold text-dreamer-dark mb-2">

@@ -1,0 +1,69 @@
+
+> dreamer-ai-backend@1.0.0 start
+> node server.js
+
+==================================================
+🚀 Dreamer AI Solutions API Server
+==================================================
+📡 Server running on port 5000
+🌍 Environment: development
+🔗 API URL: http://localhost:5000
+📚 API Documentation: http://localhost:5000/api/v1/docs
+🔍 Health Check: http://localhost:5000/health
+🤖 SEO Sitemap: http://localhost:5000/sitemap.xml
+🛡️ Security: Enhanced security middleware active
+⚡ Performance: Advanced caching and compression enabled
+==================================================
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:37.186Z"}
+Redis connection failed: 
+Redis not available, using memory cache
+✅ Services initialized successfully
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:37.189Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:37.291Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:37.494Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:37.796Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:38.198Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:38.700Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:39.305Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:40.009Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:40.813Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:41.718Z"}
+[31merror[39m: Too many Redis reconnection attempts {"service":"dreamer-ai-api","timestamp":"2025-08-08T06:14:42.722Z"}
+[31merror[39m: Redis Client Error: {"code":"ECONNREFUSED","service":"dreamer-ai-api","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1714:7)","timestamp":"2025-08-08T06:14:42.723Z"}
+[31merror[39m: Failed to connect to Redis: Too many retries {"originalError":{},"service":"dreamer-ai-api","socketError":{"code":"ECONNREFUSED"},"stack":"Error: Too many retries\n    at RedisSocket._RedisSocket_shouldReconnect (/Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/@redis/client/dist/lib/client/socket.js:140:16)\n    at RedisSocket._RedisSocket_connect (/Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/@redis/client/dist/lib/client/socket.js:162:117)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Commander.connect (/Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/@redis/client/dist/lib/client/index.js:185:9)\n    at async /Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/backend/config/redis.js:35:5","timestamp":"2025-08-08T06:14:42.723Z"}
+ValidationError: The Express 'trust proxy' setting is true, which allows anyone to trivially bypass IP-based rate limiting. See https://express-rate-limit.github.io/ERR_ERL_PERMISSIVE_TRUST_PROXY/ for more information.
+    at Object.trustProxy (/Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/express-rate-limit/dist/index.cjs:167:13)
+    at wrappedValidations.<computed> [as trustProxy] (/Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/express-rate-limit/dist/index.cjs:397:22)
+    at Object.keyGenerator (/Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/express-rate-limit/dist/index.cjs:657:20)
+    at /Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/express-rate-limit/dist/index.cjs:710:32
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/express-rate-limit/dist/index.cjs:691:5 {
+  code: 'ERR_ERL_PERMISSIVE_TRUST_PROXY',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_PERMISSIVE_TRUST_PROXY/'
+}
+[32minfo[39m: POST /api/api/analytics/web-vitals 404 3ms {"meta":{"req":{"headers":{"accept":"*/*","accept-encoding":"gzip, deflate, br, zstd","accept-language":"en-US,en;q=0.9","connection":"keep-alive","content-length":"247","content-type":"application/json","host":"localhost:5000","origin":"http://localhost:3000","referer":"http://localhost:3000/","sec-ch-ua":"\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"","sec-ch-ua-mobile":"?0","sec-ch-ua-platform":"\"macOS\"","sec-fetch-dest":"empty","sec-fetch-mode":"cors","sec-fetch-site":"same-site","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"},"httpVersion":"1.1","method":"POST","originalUrl":"/api/api/analytics/web-vitals","query":{},"url":"/api/api/analytics/web-vitals"},"res":{"statusCode":404},"responseTime":3},"timestamp":"2025-08-08T06:14:46.790Z"}
+node:_http_outgoing:699
+    throw new ERR_HTTP_HEADERS_SENT('set');
+    ^
+
+Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    at ServerResponse.setHeader (node:_http_outgoing:699:11)
+    at ServerResponse.header (/Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/node_modules/express/lib/response.js:794:10)
+    at ServerResponse.<anonymous> (/Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/backend/middleware/performance.js:155:9)
+    at ServerResponse.emit (node:events:519:35)
+    at onFinish (node:_http_outgoing:1081:10)
+    at callback (node:internal/streams/writable:764:21)
+    at afterWrite (node:internal/streams/writable:708:5)
+    at afterWriteTick (node:internal/streams/writable:694:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+  code: 'ERR_HTTP_HEADERS_SENT'
+}
+
+Node.js v23.11.0
+npm error Lifecycle script `start` failed with error:
+npm error code 1
+npm error path /Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/backend
+npm error workspace dreamer-ai-backend@1.0.0
+npm error location /Users/lasaj917/Claude Code/01-Enterprise-Apps/dreamer-ai-website/backend
+npm error command failed
+npm error command sh -c node server.js

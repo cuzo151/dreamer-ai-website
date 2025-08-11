@@ -9,8 +9,15 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="md:col-span-2">
             <div className="flex items-center mb-4">
-              <img src="/logo.png" alt="Dreamer AI Solutions" className="h-8 w-8 mr-3" />
-              <span className="text-xl font-semibold">Dreamer AI Solutions</span>
+              <img 
+                src="/logo192.png" 
+                alt="Dreamer AI Solutions" 
+                className="h-10 w-10 mr-3 rounded-lg shadow-sm" 
+                loading="lazy"
+              />
+              <span className="text-xl font-semibold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+                Dreamer AI Solutions
+              </span>
             </div>
             <p className="text-gray-300 mb-4">
               Transforming businesses with intelligent AI solutions. 

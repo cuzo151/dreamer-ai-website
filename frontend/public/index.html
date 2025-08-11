@@ -4,10 +4,83 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#667eea" />
+    
+    <!-- Preconnect to speed up video loading -->
+    <link rel="preconnect" href="https://app.heygen.com" />
+    <link rel="dns-prefetch" href="https://app.heygen.com" />
+    <link rel="preconnect" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="preconnect" href="https://elevenlabs.io" />
+    <link rel="dns-prefetch" href="https://elevenlabs.io" />
+    
+    <!-- Enhanced SEO Meta Tags -->
+    <meta name="keywords" content="AI solutions, artificial intelligence, document intelligence, voice solutions, workflow automation, enterprise AI, legal AI, business automation" />
+    <meta name="author" content="Dreamer AI Solutions" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Dreamer AI Solutions - AI-Powered Business Solutions" />
+    <meta property="og:description" content="Transform your business with enterprise-grade AI solutions. Document intelligence, voice solutions, data analytics, and workflow automation for law firms and enterprises." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dreamerai.io" />
+    <meta property="og:image" content="%PUBLIC_URL%/logo512.png" />
+    <meta property="og:site_name" content="Dreamer AI Solutions" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Dreamer AI Solutions - AI-Powered Business Solutions" />
+    <meta name="twitter:description" content="Transform your business with enterprise-grade AI solutions. Document intelligence, voice solutions, data analytics, and workflow automation." />
+    <meta name="twitter:image" content="%PUBLIC_URL%/logo512.png" />
+    <meta name="twitter:creator" content="@DreamerAI" />
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Dreamer AI Solutions",
+      "url": "https://dreamerai.io",
+      "logo": "https://dreamerai.io/logo512.png",
+      "description": "Enterprise-grade AI solutions for document intelligence, voice processing, and workflow automation.",
+      "founder": {
+        "@type": "Person",
+        "name": "J. LaSalle",
+        "jobTitle": "Founder & CEO"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "support@dreamerai.io",
+        "contactType": "Customer Support"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/company/dreamer-ai-solutions"
+      ]
+    }
+    </script>
+    
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://app.heygen.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//unpkg.com">
+    <link rel="dns-prefetch" href="//app.heygen.com">
+    
+    <!-- Critical resource hints -->
+    <link rel="preload" href="%PUBLIC_URL%/logo192.png" as="image" type="image/png">
+    
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Dreamer AI Solutions - Transform your business with enterprise-grade AI solutions. Document intelligence, voice solutions, data analytics, and workflow automation for law firms and enterprises."
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
@@ -15,6 +88,12 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dreamerai.io" />
+    
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="%PUBLIC_URL%/sitemap.xml" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -24,11 +103,22 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Dreamer AI Solutions - AI-Powered Business Solutions</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <div id="modal-root"></div>
+    <!-- ElevenLabs ConvAI Widget - Load after page load -->
+    <script>
+      window.addEventListener('load', function() {
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
+        script.async = true;
+        script.type = 'text/javascript';
+        document.body.appendChild(script);
+      });
+    </script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

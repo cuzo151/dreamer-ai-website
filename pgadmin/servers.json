@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Dreamer AI Development",
+      "Group": "Development",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "dreamer",
+      "SSLMode": "prefer",
+      "PassFile": "/tmp/pgpassfile"
+    }
+  }
+}

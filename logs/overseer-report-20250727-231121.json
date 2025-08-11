@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-07-28T03:11:21Z",
+  "project": "dreamer-ai-website",
+  "overseer_version": "1.0.0",
+  "verification_results": {
+    "tests": {
+      "passed": false,
+      "frontend_coverage": 0,
+      "backend_coverage": 0,
+      "average_coverage": 0
+    }
+  },
+  "quality_metrics": {},
+  "recommendations": [],
+  "approval_decision": "pending",
+  "approval_reason": ""
+}

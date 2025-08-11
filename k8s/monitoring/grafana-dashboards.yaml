@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: monitoring
+data:
+  dreamer-ai-overview.json: |
+    {
+      "dashboard": {
+        "title": "Dreamer AI - System Overview",
+        "panels": [
+          {
+            "title": "Request Rate",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total[5m])) by (service)"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Error Rate",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (service)"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Response Time",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service))"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "CPU Usage",
+            "targets": [
+              {
+                "expr": "sum(rate(container_cpu_usage_seconds_total[5m])) by (pod)"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Memory Usage",
+            "targets": [
+              {
+                "expr": "sum(container_memory_usage_bytes) by (pod)"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Database Connections",
+            "targets": [
+              {
+                "expr": "pg_stat_database_numbackends"
+              }
+            ],
+            "type": "graph"
+          }
+        ]
+      }
+    }
+  dreamer-ai-application.json: |
+    {
+      "dashboard": {
+        "title": "Dreamer AI - Application Metrics",
+        "panels": [
+          {
+            "title": "Active Users",
+            "targets": [
+              {
+                "expr": "app_active_users"
+              }
+            ],
+            "type": "stat"
+          },
+          {
+            "title": "AI API Calls",
+            "targets": [
+              {
+                "expr": "sum(rate(ai_api_calls_total[5m])) by (provider)"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Authentication Success Rate",
+            "targets": [
+              {
+                "expr": "sum(rate(auth_attempts_total{result=\"success\"}[5m])) / sum(rate(auth_attempts_total[5m]))"
+              }
+            ],
+            "type": "stat"
+          },
+          {
+            "title": "WebSocket Connections",
+            "targets": [
+              {
+                "expr": "websocket_connections_active"
+              }
+            ],
+            "type": "graph"
+          },
+          {
+            "title": "Cache Hit Rate",
+            "targets": [
+              {
+                "expr": "sum(rate(cache_hits_total[5m])) / (sum(rate(cache_hits_total[5m])) + sum(rate(cache_misses_total[5m])))"
+              }
+            ],
+            "type": "stat"
+          }
+        ]
+      }
+    }

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dreamer-ai
+  labels:
+    app: dreamer-ai
+    monitoring: enabled

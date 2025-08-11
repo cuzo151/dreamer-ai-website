@@ -1,5 +1,5 @@
-const OpenAI = require('openai');
 const Anthropic = require('@anthropic-ai/sdk');
+const OpenAI = require('openai');
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -18,7 +18,7 @@ async function processDocument(text, type = 'general') {
     3. Any actionable insights
     
     Document type: ${type}
-    Document content: ${text.substring(0, 3000)}`;
+    Document content: ${text.slice(0, 3000)}`;
 
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
@@ -26,7 +26,7 @@ async function processDocument(text, type = 'general') {
       max_tokens: 500
     });
 
-    const content = response.choices[0].message.content;
+    const {content} = response.choices[0].message;
     
     // Parse the response into structured format
     return {
@@ -66,8 +66,8 @@ async function generateVisual(prompt, type = 'presentation') {
     // In production, this would use actual visual generation
     return {
       url: 'https://via.placeholder.com/800x600?text=Dreamer+AI+Visual',
-      type: type,
-      prompt: prompt,
+      type,
+      prompt,
       generatedAt: new Date().toISOString()
     };
   } catch (error) {
@@ -81,7 +81,7 @@ async function analyzeData(data, analysisType = 'general') {
   try {
     const prompt = `Analyze this data and provide business insights:
     Analysis type: ${analysisType}
-    Data: ${JSON.stringify(data).substring(0, 2000)}
+    Data: ${JSON.stringify(data).slice(0, 2000)}
     
     Provide:
     1. Key insights
@@ -94,7 +94,7 @@ async function analyzeData(data, analysisType = 'general') {
       max_tokens: 500
     });
 
-    const content = response.choices[0].message.content;
+    const {content} = response.choices[0].message;
 
     return {
       insights: ['Revenue trends identified', 'Customer patterns detected', 'Optimization opportunities found'],
@@ -116,7 +116,7 @@ function extractSection(text, section) {
 }
 
 function extractBulletPoints(text) {
-  const bulletRegex = /[-•*]\s*(.+)/g;
+  const bulletRegex = /[*•-]\s*(.+)/g;
   const numberRegex = /\d+\.\s*(.+)/g;
   const bullets = [];
   

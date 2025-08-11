@@ -37,3 +37,29 @@ Thumbs.db
 # Environment variables
 backend/.env
 frontend/.env
+.env.development
+.env.production
+.env.gcp
+*.env
+
+# Google Cloud
+.gcloudignore
+*-key.json
+*-credentials.json
+
+# Certificates
+certs/
+*.pem
+*.key
+*.crt
+
+# Uploads
+uploads/
+
+# Claude
+.claude/
+
+# Database data
+postgres/data/
+pgadmin/data/
+redis/data/

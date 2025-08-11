@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import './AuthModal.css';
 
 interface AuthModalProps {
@@ -9,7 +10,8 @@ interface AuthModalProps {
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode }) => {
   const [formData, setFormData] = useState({
-    fullname: '',
+    firstName: '',
+    lastName: '',
     email: '',
     company: '',
     password: '',
@@ -58,8 +60,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode }) => {
     const newErrors: {[key: string]: string} = {};
 
     if (mode === 'signup') {
-      if (!formData.fullname.trim()) {
-        newErrors.fullname = 'Full name is required';
+      if (!formData.firstName.trim()) {
+        newErrors.firstName = 'First name is required';
+      }
+      if (!formData.lastName.trim()) {
+        newErrors.lastName = 'Last name is required';
       }
     }
 
@@ -99,10 +104,36 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode }) => {
     }
 
     try {
-      // TODO: Implement actual authentication API call
-      console.log('Form submitted:', formData);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+      const endpoint = mode === 'signup' ? '/api/auth/register' : '/api/auth/login';
       
-      // Simulate successful submission
+      const response = await fetch(`${apiUrl}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          ...(mode === 'signup' && {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            company: formData.company,
+          }),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Authentication failed');
+      }
+      
+      // Store token if provided
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+      }
+      
       alert(mode === 'signup' 
         ? 'Account created successfully! Welcome to DreamerAI!' 
         : 'Welcome back to DreamerAI!'
@@ -110,7 +141,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode }) => {
       
       // Reset form and close modal
       setFormData({
-        fullname: '',
+        firstName: '',
+        lastName: '',
         email: '',
         company: '',
         password: '',
@@ -120,13 +152,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode }) => {
       onClose();
     } catch (error) {
       console.error('Authentication error:', error);
-      alert('An error occurred. Please try again.');
+      alert(error instanceof Error ? error.message : 'An error occurred. Please try again.');
     }
   };
 
   if (!isOpen) return null;
 
-  return (
+  // Use React Portal to render modal at document root
+  return ReactDOM.createPortal(
     <div className="auth-modal" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="auth-content">
         <button className="auth-close" onClick={onClose}>&times;</button>
@@ -134,18 +167,32 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode }) => {
         
         <form className="auth-form" onSubmit={handleSubmit}>
           {mode === 'signup' && (
-            <div className="form-group">
-              <label htmlFor="fullname">Full Name *</label>
-              <input
-                type="text"
-                id="fullname"
-                name="fullname"
-                value={formData.fullname}
-                onChange={handleChange}
-                className={errors.fullname ? 'error' : ''}
-              />
-              {errors.fullname && <span className="error-message">{errors.fullname}</span>}
-            </div>
+            <>
+              <div className="form-group">
+                <label htmlFor="firstName">First Name *</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className={errors.firstName ? 'error' : ''}
+                />
+                {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+              </div>
+              <div className="form-group">
+                <label htmlFor="lastName">Last Name *</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className={errors.lastName ? 'error' : ''}
+                />
+                {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+              </div>
+            </>
           )}
 
           <div className="form-group">
@@ -241,7 +288,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode }) => {
           </p>
         </form>
       </div>
-    </div>
+    </div>,
+    document.getElementById('modal-root') || document.body
   );
 };
 

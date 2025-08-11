@@ -1,0 +1,1 @@
+export const useReducedMotion = (): boolean => false;

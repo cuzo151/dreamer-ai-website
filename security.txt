@@ -1,0 +1,23 @@
+# Security Policy for Dreamer AI Solutions
+
+Contact: security@dreamerai.io
+Contact: https://dreamerai.io/security
+Expires: 2025-01-01T00:00:00.000Z
+Encryption: https://dreamerai.io/pgp-key.txt
+Acknowledgments: https://dreamerai.io/security/acknowledgments
+Policy: https://dreamerai.io/security/policy
+Hiring: https://dreamerai.io/careers
+Canonical: https://dreamerai.io/.well-known/security.txt
+
+# Bug Bounty Program
+# We appreciate responsible disclosure of security vulnerabilities.
+# Please report security issues to security@dreamerai.io
+# We aim to respond within 48 hours and resolve critical issues within 7 days.
+
+# Our commitment to security:
+# - All data is encrypted in transit and at rest
+# - Regular security audits and penetration testing
+# - Compliance with industry standards (SOC2, GDPR)
+# - 24/7 security monitoring and incident response
+
+Preferred-Languages: en

@@ -1,0 +1,1053 @@
+openapi: 3.0.3
+info:
+  title: Dreamer AI Solutions API
+  description: |
+    RESTful API for Dreamer AI Solutions platform.
+    
+    ## Authentication
+    The API uses JWT-based authentication. Include the access token in the Authorization header:
+    ```
+    Authorization: Bearer <access_token>
+    ```
+    
+    ## Rate Limiting
+    API requests are rate-limited based on user tier:
+    - Anonymous: 100 requests/15 minutes
+    - Authenticated: 1000 requests/15 minutes
+    - Premium: 5000 requests/15 minutes
+    - Enterprise: Custom limits
+    
+    ## Error Responses
+    All errors follow RFC 7807 Problem Details format.
+  version: 1.0.0
+  contact:
+    name: Dreamer AI Solutions Support
+    email: support@dreamerai.io
+    url: https://dreamerai.io/support
+  license:
+    name: Proprietary
+    url: https://dreamerai.io/terms
+
+servers:
+  - url: https://api.dreamerai.io/v1
+    description: Production server
+  - url: https://api-staging.dreamerai.io/v1
+    description: Staging server
+  - url: http://localhost:5000/api/v1
+    description: Development server
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Users
+    description: User profile management
+  - name: Services
+    description: AI services catalog
+  - name: Bookings
+    description: Service booking management
+  - name: Leads
+    description: Lead and contact management
+  - name: Case Studies
+    description: Success stories and case studies
+  - name: Chat
+    description: AI chat functionality
+  - name: Analytics
+    description: Analytics and reporting
+
+security:
+  - bearerAuth: []
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register new user
+      operationId: registerUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login with email and password
+      operationId: loginUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout and invalidate tokens
+      operationId: logoutUser
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      operationId: refreshToken
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/password-reset:
+    post:
+      tags:
+        - Authentication
+      summary: Request password reset
+      operationId: requestPasswordReset
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Password reset email sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /users/profile:
+    get:
+      tags:
+        - Users
+      summary: Get current user profile
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: User profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    
+    put:
+      tags:
+        - Users
+      summary: Update user profile
+      operationId: updateUserProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /services:
+    get:
+      tags:
+        - Services
+      summary: List all available services
+      operationId: listServices
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Services list retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServicesListResponse'
+
+  /services/{slug}:
+    get:
+      tags:
+        - Services
+      summary: Get service details
+      operationId: getService
+      security: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Service details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /bookings:
+    get:
+      tags:
+        - Bookings
+      summary: List user bookings
+      operationId: listBookings
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/BookingStatus'
+      responses:
+        '200':
+          description: Bookings list retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingsListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - Bookings
+      summary: Create new booking
+      operationId: createBooking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+      responses:
+        '201':
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+
+  /chat/conversations:
+    get:
+      tags:
+        - Chat
+      summary: List chat conversations
+      operationId: listConversations
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Conversations list retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationsListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - Chat
+      summary: Create new conversation
+      operationId: createConversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '201':
+          description: Conversation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /chat/completions:
+    post:
+      tags:
+        - Chat
+      summary: Get AI chat completion
+      operationId: getChatCompletion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+      responses:
+        '200':
+          description: Chat completion generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /analytics/events:
+    post:
+      tags:
+        - Analytics
+      summary: Track analytics event
+      operationId: trackEvent
+      security:
+        - bearerAuth: []
+        - {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsEventRequest'
+      responses:
+        '201':
+          description: Event tracked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Page number for pagination
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    LimitParam:
+      name: limit
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+  schemas:
+    # Request schemas
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        company:
+          type: string
+        phone:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        company:
+          type: string
+        phone:
+          type: string
+        jobTitle:
+          type: string
+
+    CreateBookingRequest:
+      type: object
+      required:
+        - serviceId
+        - consultationType
+        - scheduledAt
+      properties:
+        serviceId:
+          type: string
+          format: uuid
+        consultationType:
+          $ref: '#/components/schemas/ConsultationType'
+        scheduledAt:
+          type: string
+          format: date-time
+        notes:
+          type: string
+
+    ChatCompletionRequest:
+      type: object
+      required:
+        - messages
+      properties:
+        conversationId:
+          type: string
+          format: uuid
+        messages:
+          type: array
+          items:
+            type: object
+            required:
+              - role
+              - content
+            properties:
+              role:
+                type: string
+                enum: [user, assistant, system]
+              content:
+                type: string
+        model:
+          type: string
+          default: gpt-4
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 0.7
+
+    AnalyticsEventRequest:
+      type: object
+      required:
+        - eventType
+      properties:
+        eventType:
+          type: string
+        pageUrl:
+          type: string
+        properties:
+          type: object
+          additionalProperties: true
+
+    # Response schemas
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            accessToken:
+              type: string
+            refreshToken:
+              type: string
+            tokenType:
+              type: string
+              default: Bearer
+            expiresIn:
+              type: integer
+            refreshExpiresIn:
+              type: integer
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    TokenResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+            tokenType:
+              type: string
+              default: Bearer
+            expiresIn:
+              type: integer
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    UserProfileResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: '#/components/schemas/UserProfile'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    ServicesListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Service'
+
+    ServiceResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: '#/components/schemas/ServiceDetail'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    BookingsListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Booking'
+
+    BookingResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: '#/components/schemas/BookingDetail'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    ConversationsListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Conversation'
+
+    ConversationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: '#/components/schemas/ConversationDetail'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    ChatCompletionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            conversationId:
+              type: string
+              format: uuid
+            message:
+              $ref: '#/components/schemas/ChatMessage'
+            tokensUsed:
+              type: integer
+            model:
+              type: string
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    # Entity schemas
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        emailVerified:
+          type: boolean
+
+    UserProfile:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            company:
+              type: string
+            phone:
+              type: string
+            jobTitle:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+            lastLogin:
+              type: string
+              format: date-time
+
+    Service:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+        isActive:
+          type: boolean
+
+    ServiceDetail:
+      allOf:
+        - $ref: '#/components/schemas/Service'
+        - type: object
+          properties:
+            features:
+              type: array
+              items:
+                type: string
+            pricing:
+              type: object
+            createdAt:
+              type: string
+              format: date-time
+
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        serviceId:
+          type: string
+          format: uuid
+        serviceName:
+          type: string
+        consultationType:
+          $ref: '#/components/schemas/ConsultationType'
+        scheduledAt:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+        durationMinutes:
+          type: integer
+
+    BookingDetail:
+      allOf:
+        - $ref: '#/components/schemas/Booking'
+        - type: object
+          properties:
+            meetingLink:
+              type: string
+            notes:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ConversationDetail:
+      allOf:
+        - $ref: '#/components/schemas/Conversation'
+        - type: object
+          properties:
+            messages:
+              type: array
+              items:
+                $ref: '#/components/schemas/ChatMessage'
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [user, assistant, system]
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    # Enums
+    UserRole:
+      type: string
+      enum:
+        - visitor
+        - client
+        - admin
+        - super_admin
+
+    BookingStatus:
+      type: string
+      enum:
+        - pending
+        - confirmed
+        - cancelled
+        - completed
+        - no_show
+
+    ConsultationType:
+      type: string
+      enum:
+        - discovery
+        - technical
+        - strategy
+        - implementation
+        - support
+
+    # Common schemas
+    ResponseMeta:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        version:
+          type: string
+        requestId:
+          type: string
+
+    PaginatedResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+            perPage:
+              type: integer
+            total:
+              type: integer
+            totalPages:
+              type: integer
+            hasMore:
+              type: boolean
+        links:
+          type: object
+          properties:
+            first:
+              type: string
+            last:
+              type: string
+            next:
+              type: string
+            prev:
+              type: string
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+
+    ProblemDetail:
+      type: object
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+              code:
+                type: string
+        timestamp:
+          type: string
+          format: date-time
+        requestId:
+          type: string
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: https://api.dreamerai.io/errors/validation-error
+            title: Validation Error
+            status: 400
+            detail: Invalid input data provided
+            errors:
+              - field: email
+                message: Email is required
+                code: VALIDATION_ERROR
+
+    UnauthorizedError:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: https://api.dreamerai.io/errors/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Authentication is required to access this resource
+
+    ForbiddenError:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: https://api.dreamerai.io/errors/forbidden
+            title: Forbidden
+            status: 403
+            detail: You do not have permission to access this resource
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: https://api.dreamerai.io/errors/not-found
+            title: Resource Not Found
+            status: 404
+            detail: The requested resource was not found
+
+    ConflictError:
+      description: Resource conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: https://api.dreamerai.io/errors/conflict
+            title: Conflict
+            status: 409
+            detail: A resource with this identifier already exists
+
+    RateLimitError:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          description: Number of seconds until the rate limit resets
+          schema:
+            type: integer
+        X-RateLimit-Limit:
+          description: The rate limit ceiling
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          description: The number of requests remaining in the window
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          description: The time when the rate limit resets
+          schema:
+            type: string
+            format: date-time
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetail'
+          example:
+            type: https://api.dreamerai.io/errors/rate-limit
+            title: Rate Limit Exceeded
+            status: 429
+            detail: You have exceeded the rate limit of 100 requests per 15 minutes

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   CheckCircleIcon, 
   ClockIcon,
@@ -6,7 +6,10 @@ import {
   ChartBarIcon,
   DocumentTextIcon,
   SpeakerWaveIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  PlayIcon,
+  PauseIcon,
+  MicrophoneIcon
 } from '@heroicons/react/24/outline';
 
 interface DemoResultProps {
@@ -15,10 +18,104 @@ interface DemoResultProps {
 }
 
 const DemoResult: React.FC<DemoResultProps> = ({ result, type }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [audioError, setAudioError] = useState<string | null>(null);
+
   let parsedResult: any;
+  let hasValidResult = true;
   try {
     parsedResult = JSON.parse(result);
   } catch {
+    hasValidResult = false;
+    parsedResult = {};
+  }
+
+  // Initialize audio when voice clone result is received
+  useEffect(() => {
+    if (type === 'voiceclone' && parsedResult.audioGenerated) {
+      // Create a mock audio element with a sample audio file
+      // In production, this would be the actual generated audio URL
+      const audio = new Audio();
+      
+      // Use a text-to-speech API or pre-recorded sample
+      // For demo purposes, we'll use the Web Speech API
+      if ('speechSynthesis' in window) {
+        audioRef.current = audio;
+      }
+    }
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [type, parsedResult]);
+
+  const handlePlayPause = () => {
+    if ('speechSynthesis' in window && parsedResult.originalText) {
+      const synth = window.speechSynthesis;
+      
+      if (isPlaying) {
+        synth.cancel();
+        setIsPlaying(false);
+        setAudioProgress(0);
+      } else {
+        try {
+          const utterance = new SpeechSynthesisUtterance(parsedResult.originalText);
+          utterance.voice = synth.getVoices().find(voice => voice.name.includes('English')) || null;
+          utterance.rate = 0.9;
+          utterance.pitch = 1;
+          
+          utterance.onstart = () => {
+            setIsPlaying(true);
+            setAudioError(null);
+          };
+          
+          utterance.onend = () => {
+            setIsPlaying(false);
+            setAudioProgress(0);
+          };
+          
+          utterance.onerror = () => {
+            setIsPlaying(false);
+            setAudioProgress(0);
+            setAudioError('Audio playback failed');
+          };
+          
+          // Simple progress simulation
+          const duration = parsedResult.originalText.length * 50; // Approximate duration
+          let progress = 0;
+          const progressInterval = setInterval(() => {
+            if (progress < 100) {
+              progress += 100 / (duration / 100);
+              setAudioProgress(Math.min(progress, 100));
+            } else {
+              clearInterval(progressInterval);
+            }
+          }, 100);
+          
+          utterance.onend = () => {
+            setIsPlaying(false);
+            setAudioProgress(0);
+            clearInterval(progressInterval);
+          };
+          
+          synth.speak(utterance);
+        } catch (error) {
+          setAudioError('Speech synthesis not available');
+          console.error('Speech synthesis error:', error);
+        }
+      }
+    } else {
+      setAudioError('Speech synthesis not supported in this browser');
+    }
+  };
+
+  // Handle invalid JSON after hooks are called
+  if (!hasValidResult) {
     return (
       <div className="mt-6 p-6 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border border-red-200">
         <p className="text-red-700">{result}</p>
@@ -89,14 +186,54 @@ const DemoResult: React.FC<DemoResultProps> = ({ result, type }) => {
           <div className="bg-gray-100 rounded-lg p-4 text-center">
             <SpeakerWaveIcon className="h-12 w-12 text-purple-600 mx-auto mb-2" />
             <p className="text-sm text-gray-600 mb-3">Professional Voice Generated</p>
-            <div className="flex items-center justify-center space-x-2">
-              <div className="w-2 h-2 bg-purple-600 rounded-full animate-pulse"></div>
-              <div className="w-2 h-2 bg-purple-600 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-              <div className="w-2 h-2 bg-purple-600 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
-            </div>
-            <button className="mt-3 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition-colors">
-              ▶ Play Sample
+            
+            {/* Audio waveform visualization */}
+            {isPlaying && (
+              <div className="flex items-center justify-center space-x-1 mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-1 bg-purple-600 rounded-full animate-pulse"
+                    style={{
+                      height: `${20 + Math.random() * 20}px`,
+                      animationDelay: `${i * 0.1}s`,
+                      animationDuration: '0.8s'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+            
+            {/* Progress bar */}
+            {(isPlaying || audioProgress > 0) && (
+              <div className="w-full bg-gray-300 rounded-full h-1 mb-3">
+                <div 
+                  className="bg-purple-600 h-1 rounded-full transition-all duration-100"
+                  style={{ width: `${audioProgress}%` }}
+                />
+              </div>
+            )}
+            
+            <button 
+              onClick={handlePlayPause}
+              className="mt-3 px-6 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition-all transform hover:scale-105 flex items-center justify-center mx-auto space-x-2"
+            >
+              {isPlaying ? (
+                <>
+                  <PauseIcon className="h-4 w-4" />
+                  <span>Pause</span>
+                </>
+              ) : (
+                <>
+                  <PlayIcon className="h-4 w-4" />
+                  <span>Play Sample</span>
+                </>
+              )}
             </button>
+            
+            {audioError && (
+              <p className="text-xs text-red-600 mt-2">{audioError}</p>
+            )}
           </div>
         </div>
         
@@ -127,6 +264,72 @@ const DemoResult: React.FC<DemoResultProps> = ({ result, type }) => {
         <p className="text-xs text-gray-500 mb-1">Original Text:</p>
         <p className="text-sm text-gray-700 italic">"{parsedResult.originalText}"</p>
       </div>
+    </div>
+  );
+
+  const renderVoiceTranscriptionResult = () => (
+    <div className="mt-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
+      <div className="flex items-center mb-4">
+        <MicrophoneIcon className="h-6 w-6 text-blue-600 mr-2" />
+        <h4 className="text-lg font-semibold text-dreamer-dark">Voice Analysis Complete</h4>
+        <CheckCircleIcon className="h-5 w-5 text-green-500 ml-2" />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg p-4 shadow-sm">
+          <h5 className="font-medium text-gray-900 mb-3">Transcription</h5>
+          <div className="bg-gray-50 rounded-lg p-4">
+            <p className="text-gray-700 italic">"{parsedResult.transcription}"</p>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+            <div className="text-center">
+              <div className="text-lg font-semibold text-blue-600">{parsedResult.analysis?.wordCount || 0}</div>
+              <div className="text-gray-600">Words</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-semibold text-blue-600">{parsedResult.analysis?.confidenceScore || 0}%</div>
+              <div className="text-gray-600">Confidence</div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-lg p-4 shadow-sm">
+          <h5 className="font-medium text-gray-900 mb-3">Audio Analysis</h5>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-600">Language:</span>
+              <span className="font-medium">{parsedResult.analysis?.languageDetected || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Audio Quality:</span>
+              <span className="font-medium text-green-600">{parsedResult.technicalMetrics?.audioQuality || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Speaking Rate:</span>
+              <span className="font-medium">{parsedResult.analysis?.avgWordsPerMinute || 0} WPM</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Clarity:</span>
+              <span className="font-medium">{parsedResult.analysis?.clarity || 'N/A'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {parsedResult.insights && (
+        <div className="mt-4 bg-white rounded-lg p-4 shadow-sm">
+          <h5 className="font-medium text-gray-900 mb-2">AI Insights</h5>
+          <ul className="space-y-1">
+            {parsedResult.insights.map((insight: string, index: number) => (
+              <li key={index} className="text-sm text-gray-700 flex items-start">
+                <span className="inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                {insight}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 
@@ -191,6 +394,8 @@ const DemoResult: React.FC<DemoResultProps> = ({ result, type }) => {
   switch (type) {
     case 'document':
       return renderDocumentResult();
+    case 'voice':
+      return renderVoiceTranscriptionResult();
     case 'voiceclone':
       return renderVoiceCloneResult();
     case 'leads':
