@@ -20,8 +20,9 @@ const logger = winston.createLogger({
   ]
 });
 
-// Add file transport in production
-if (process.env.NODE_ENV === 'production') {
+// Add file transport in production (disabled for App Engine)
+// App Engine doesn't allow file writes, use console logging only
+if (process.env.NODE_ENV === 'production' && process.env.GAE_APPLICATION === undefined) {
   logger.add(new winston.transports.File({ 
     filename: 'logs/error.log', 
     level: 'error' 

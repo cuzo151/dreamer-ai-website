@@ -26,7 +26,7 @@ const Contact: React.FC = () => {
 
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
-      await axios.post(`${apiUrl}/api/contact/submit`, formData);
+      await axios.post(`${apiUrl}/api/v1/contact/submit`, formData);
       setSubmitStatus('success');
       setFormData({
         name: '',
@@ -219,11 +219,11 @@ const Contact: React.FC = () => {
 
                 <div className="mt-6">
                   <AnimatedButton
+                    type="submit"
                     variant="primary"
                     size="medium"
                     fullWidth
                     disabled={submitting}
-                    onClick={() => {}}
                   >
                     {submitting ? (
                       <div className="flex items-center justify-center">

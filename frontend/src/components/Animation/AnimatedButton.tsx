@@ -10,6 +10,7 @@ interface AnimatedButtonProps {
   className?: string;
   disabled?: boolean;
   fullWidth?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const AnimatedButton: React.FC<AnimatedButtonProps> = ({
@@ -20,6 +21,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   className = '',
   disabled = false,
   fullWidth = false,
+  type = 'button',
 }) => {
   const prefersReducedMotion = useReducedMotion();
 
@@ -42,6 +44,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 
   return (
     <motion.button
+      type={type}
       className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${disabledClasses} ${widthClasses} ${className}`}
       onClick={onClick}
       disabled={disabled}

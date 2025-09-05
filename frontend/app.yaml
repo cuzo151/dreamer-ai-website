@@ -1,0 +1,23 @@
+runtime: nodejs20
+env: standard
+
+handlers:
+- url: /static
+  static_dir: build/static
+  expiration: "1h"
+
+- url: /(.*\.(js|css|map|ico|png|jpg|jpeg|gif|svg|webp|webmanifest))$
+  static_files: build/\1
+  upload: build/.*\.(js|css|map|ico|png|jpg|jpeg|gif|svg|webp|webmanifest)$
+  expiration: "1h"
+
+- url: /.*
+  static_files: build/index.html
+  upload: build/index.html
+  secure: always
+  redirect_http_response_code: 301
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 2
+  target_cpu_utilization: 0.65

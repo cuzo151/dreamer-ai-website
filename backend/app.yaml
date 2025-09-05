@@ -1,0 +1,18 @@
+runtime: nodejs20
+service: backend
+
+instance_class: F1
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 2
+
+env_variables:
+  NODE_ENV: "production"
+  PORT: "8080"
+  ALLOWED_ORIGINS: "https://dreamerai.io,https://dreamer-ai-website.uc.r.appspot.com,https://www.dreamerai.io"
+
+handlers:
+- url: /.*
+  script: auto
+  secure: always

@@ -6,9 +6,9 @@ const path = require('path');
 const FormData = require('form-data');
 const axios = require('axios');
 
-// Configure multer for file uploads
+// Configure multer for file uploads (use memory storage for App Engine)
 const upload = multer({ 
-  dest: 'uploads/',
+  storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
   fileFilter: (req, file, cb) => {
     // Accept audio files only
@@ -34,8 +34,7 @@ router.post('/clone-voice', upload.single('audio'), async (req, res) => {
     if (!apiKey) {
       console.log('ElevenLabs API key not configured - returning demo response');
       
-      // Clean up uploaded file
-      await fs.unlink(req.file.path).catch(console.error);
+      // No need to clean up file with memory storage
       
       // Return demo response
       return res.json({
@@ -51,9 +50,8 @@ router.post('/clone-voice', upload.single('audio'), async (req, res) => {
     formData.append('name', name);
     formData.append('description', description);
     
-    // Read the uploaded file
-    const fileBuffer = await fs.readFile(req.file.path);
-    formData.append('files', fileBuffer, {
+    // Use the file buffer directly from memory storage
+    formData.append('files', req.file.buffer, {
       filename: req.file.originalname || 'audio.wav',
       contentType: req.file.mimetype
     });
@@ -72,8 +70,7 @@ router.post('/clone-voice', upload.single('audio'), async (req, res) => {
       }
     );
 
-    // Clean up uploaded file
-    await fs.unlink(req.file.path).catch(console.error);
+    // No file cleanup needed with memory storage
 
     res.json({
       voiceId: response.data.voice_id,
@@ -85,10 +82,7 @@ router.post('/clone-voice', upload.single('audio'), async (req, res) => {
   } catch (error) {
     console.error('Voice cloning error:', error);
     
-    // Clean up uploaded file if it exists
-    if (req.file) {
-      await fs.unlink(req.file.path).catch(console.error);
-    }
+    // No file cleanup needed with memory storage
 
     // Return demo response on error
     res.json({

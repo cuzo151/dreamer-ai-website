@@ -153,7 +153,7 @@ export const usePerformanceMonitor = () => {
 
   // Collect performance data
   const collectPerformanceData = useCallback(() => {
-    if (!performance) return;
+    if (!performance || typeof performance.getEntriesByType !== 'function') return;
 
     // Navigation timing
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
