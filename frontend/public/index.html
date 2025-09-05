@@ -109,16 +109,9 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <div id="modal-root"></div>
-    <!-- ElevenLabs ConvAI Widget - Load after page load -->
-    <script>
-      window.addEventListener('load', function() {
-        const script = document.createElement('script');
-        script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
-        script.async = true;
-        script.type = 'text/javascript';
-        document.body.appendChild(script);
-      });
-    </script>
+    <!-- ElevenLabs ConvAI Widget -->
+    <elevenlabs-convai agent-id="agent_01jy7cvckbf8k9vyctnmdye8wq"></elevenlabs-convai>
+    <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
